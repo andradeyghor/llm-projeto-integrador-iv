@@ -1,0 +1,36 @@
+# Ambientes Virtuais
+venv/
+.venv/
+env/
+ENV/
+
+# Arquivos de Variáveis de Ambiente (Segurança de Chaves de API)
+.env
+.env.local
+.env.*.local
+
+# Python cache & bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Banco de dados e checkpoints gerados localmente
+*.db
+*.sqlite
+*.sqlite3
+data/processed/
+data/cache/
+produtos_enriquecidos.db
+
+# IDEs e Editores
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Arquivos de logs
+*.log
