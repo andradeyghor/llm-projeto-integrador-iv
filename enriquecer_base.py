@@ -1,10 +1,20 @@
 import os
+import sys
 import sqlite3
 import pandas as pd
 from typing import List, Optional
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
 from tqdm import tqdm
+
+# Evitar problemas de encoding no terminal Windows (cp1252)
+if sys.platform == "win32":
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+        sys.stderr.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
+
 from google import genai
 from google.genai import types
 
@@ -50,7 +60,7 @@ def init_db(db_name="produtos_enriquecidos.db"):
 
 def enriquecer_base(limite_total: Optional[int] = None, tamanho_lote: int = 15):
     api_key = os.getenv("GEMINI_API_KEY")
-    if not api_key or api_key == "sua_chave_aqui":
+    if not api_key or api_key.strip() == "" or api_key == "sua_chave_aqui":
         raise ValueError("Configure a variável GEMINI_API_KEY no arquivo .env!")
 
     client = genai.Client(api_key=api_key)
@@ -60,22 +70,22 @@ def enriquecer_base(limite_total: Optional[int] = None, tamanho_lote: int = 15):
     # Identificar IDs já gravados para garantir continuidade sem custo duplicado
     cursor.execute("SELECT id_original FROM produtos")
     processados = set(row[0] for row in cursor.fetchall())
-    print(f"📦 Itens já salvos no banco local 'produtos_enriquecidos.db': {len(processados)}")
+    print(f"[INFO] Itens ja salvos no banco local 'produtos_enriquecidos.db': {len(processados)}")
 
     df = pd.read_csv("bd.csv")
     df_pendentes = df[~df["id"].isin(processados)]
 
     if limite_total:
-        print(f"🎯 Modo Limitado: processando no máximo {limite_total} itens novos.")
+        print(f"[INFO] Modo Limitado: processando no maximo {limite_total} itens novos.")
         df_pendentes = df_pendentes.head(limite_total)
 
     if df_pendentes.empty:
-        print("✅ Todos os itens selecionados já foram processados!")
+        print("[INFO] Todos os itens selecionados ja foram processados!")
         return
 
     registros = df_pendentes.to_dict(orient="records")
     total_lotes = (len(registros) + tamanho_lote - 1) // tamanho_lote
-    print(f"🚀 Iniciando processamento: {len(registros)} itens em {total_lotes} lotes de {tamanho_lote} itens...")
+    print(f"[INFO] Iniciando processamento: {len(registros)} itens em {total_lotes} lotes de {tamanho_lote} itens...")
 
     system_instruction = (
         "Você é um especialista em autopeças de carros antigos nacionais (1970 a 1999). "
@@ -86,7 +96,7 @@ def enriquecer_base(limite_total: Optional[int] = None, tamanho_lote: int = 15):
 
     for i in tqdm(range(0, len(registros), tamanho_lote), desc="Processando Lotes"):
         lote = registros[i:i + tamanho_lote]
-        prompt_linhas = [f"- ID: {item['id']} | Nome ERP: {item['nome']} | Preço: R$ {item['preco']}" for item in lote]
+        prompt_linhas = [f"- ID: {item['id']} | Nome ERP: {item['nome']} | Preco: R$ {item['preco']}" for item in lote]
         prompt_texto = "Desnormalize e enriqueça as seguintes autopeças de carros clássicos:\n" + "\n".join(prompt_linhas)
 
         try:
@@ -125,11 +135,11 @@ def enriquecer_base(limite_total: Optional[int] = None, tamanho_lote: int = 15):
             conn.commit()
 
         except Exception as e:
-            print(f"\n⚠️ Falha no lote inicial ID {lote[0]['id']}: {e}")
+            print(f"\n[AVISO] Falha no lote inicial ID {lote[0]['id']}: {e}")
             continue
 
-    print("\n🎉 Processamento concluído com sucesso!")
+    print("\n[CONCLUIDO] Processamento finalizado com sucesso!")
 
 if __name__ == "__main__":
-    # Exemplo: processar 30 itens em lotes de 15 (apenas 2 requisições de API)
+    # Exemplo seguro: processar 30 itens em 2 lotes de 15
     enriquecer_base(limite_total=30, tamanho_lote=15)

@@ -1,9 +1,19 @@
 import os
+import sys
 import json
 import pandas as pd
 from typing import List, Optional
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
+
+# Evitar problemas de encoding no terminal Windows (cp1252)
+if sys.platform == "win32":
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+        sys.stderr.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
+
 from google import genai
 from google.genai import types
 
@@ -27,16 +37,15 @@ class RespostaLote(BaseModel):
 
 def executar_teste_validacao():
     api_key = os.getenv("GEMINI_API_KEY")
-    if not api_key or api_key == "sua_chave_aqui":
-        print("⚠️  ATENÇÃO: A variável GEMINI_API_KEY não está configurada no seu arquivo .env!")
-        print("➡️  Edite o arquivo .env e cole sua chave do Google AI Studio antes de rodar.")
+    if not api_key or api_key.strip() == "" or api_key == "sua_chave_aqui":
+        print("[AVISO] A variavel GEMINI_API_KEY nao esta configurada no seu arquivo .env!")
+        print("--> Abra o arquivo .env e adicione: GEMINI_API_KEY=sua_chave_aqui")
         return
 
-    print("🔌 Conectando à API do Google Gemini...")
+    print("[INFO] Conectando a API do Google Gemini...")
     client = genai.Client(api_key=api_key)
 
     # Amostra cirúrgica de 5 produtos com diferentes níveis de abreviação e modelos clássicos
-    # IDs escolhidos da base:
     # - 16: RET. EXT. PE FERRO KOMBI CLIPPER 76/96 LD/LE (BRACO ZAMAK)
     # - 27: FAROL AUXILIAR GOL/PAR/SAV 87/94 LENTE VIDRO RAIADO LD
     # - 36: LENTE LANTERNA TRASEIRA FIAT 147 79/82 LUZ DA RE LD
@@ -47,15 +56,14 @@ def executar_teste_validacao():
     df = pd.read_csv("bd.csv")
     df_amostra = df[df["id"].isin(ids_amostra)]
     if df_amostra.empty:
-        # Fallback se os IDs variarem
         df_amostra = df.head(5)
 
-    print(f"📦 Amostra selecionada: {len(df_amostra)} produtos para teste de validação.")
+    print(f"[INFO] Amostra selecionada: {len(df_amostra)} produtos para teste de validacao.")
     print("-" * 70)
 
     prompt_linhas = []
     for _, row in df_amostra.iterrows():
-        prompt_linhas.append(f"- ID: {row['id']} | Nome ERP: {row['nome']} | Preço: R$ {row['preco']}")
+        prompt_linhas.append(f"- ID: {row['id']} | Nome ERP: {row['nome']} | Preco: R$ {row['preco']}")
 
     prompt_texto = "Desnormalize e enriqueça as seguintes autopeças de carros clássicos:\n" + "\n".join(prompt_linhas)
 
@@ -66,7 +74,7 @@ def executar_teste_validacao():
         "em metadados técnicos precisos, descrições claras e perguntas realistas de clientes de oficina e colecionadores."
     )
 
-    print("🚀 Enviando 1 única requisição para o Gemini 2.5 Flash (consumo de cota mínimo: ~800 tokens)...")
+    print("[INFO] Enviando 1 unica requisicao para o Gemini 2.5 Flash (~800 tokens)...")
     try:
         response = client.models.generate_content(
             model="gemini-2.5-flash",
@@ -81,20 +89,20 @@ def executar_teste_validacao():
 
         resultado: RespostaLote = RespostaLote.model_validate_json(response.text)
 
-        print("\n✅ SUCESSO! Resultado obtido e validado com o Schema Pydantic:")
+        print("\n[SUCESSO] Resultado obtido e validado com o Schema Pydantic:")
         print("=" * 70)
 
         resultado_dict = []
         for p in resultado.produtos:
             print(f"\n[ID {p.id_original}]")
-            print(f"  • Tipo: {p.tipo_peca}")
-            print(f"  • Montadora: {p.montadora} | Modelos: {', '.join(p.modelos_compativeis)}")
-            print(f"  • Anos: {p.ano_inicio or 'N/A'} até {p.ano_fim or 'N/A'} | Posição: {p.posicao_lado}")
-            print(f"  • Acabamento: {p.detalhes_acabamento}")
-            print(f"  • Descrição Amigável: {p.descricao_amigavel}")
-            print("  • Perguntas Sintéticas do Balcão:")
+            print(f"  Tipo: {p.tipo_peca}")
+            print(f"  Montadora: {p.montadora} | Modelos: {', '.join(p.modelos_compativeis)}")
+            print(f"  Anos: {p.ano_inicio or 'N/A'} ate {p.ano_fim or 'N/A'} | Posicao: {p.posicao_lado}")
+            print(f"  Acabamento: {p.detalhes_acabamento}")
+            print(f"  Descricao Amigavel: {p.descricao_amigavel}")
+            print("  Perguntas Sinteticas do Balcao:")
             for q in p.perguntas_clientes:
-                print(f"      - \"{q}\"")
+                print(f"    - \"{q}\"")
             resultado_dict.append(p.model_dump())
 
         # Salvar resultado do teste para inspeção
@@ -103,10 +111,10 @@ def executar_teste_validacao():
             json.dump(resultado_dict, f, ensure_ascii=False, indent=2)
 
         print("\n" + "=" * 70)
-        print("📁 Resultado completo do teste salvo em: data/teste_validacao.json")
+        print("[CONCLUIDO] Resultado completo do teste salvo em: data/teste_validacao.json")
 
     except Exception as e:
-        print(f"\n❌ Ocorreu um erro na chamada da API: {e}")
+        print(f"\n[ERRO] Ocorreu um erro na chamada da API: {e}")
 
 if __name__ == "__main__":
     executar_teste_validacao()
