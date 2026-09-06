@@ -63,7 +63,7 @@ def executar_teste_validacao():
 
     prompt_linhas = []
     for _, row in df_amostra.iterrows():
-        prompt_linhas.append(f"- ID: {row['id']} | Nome ERP: {row['nome']} | Preco: R$ {row['preco']}")
+        prompt_linhas.append(f"- ID: {row['id']} | Nome ERP: {row['nome']} | Qtd Estoque: {row['quantidade']}")
 
     prompt_texto = "Desnormalize e enriqueça as seguintes autopeças de carros clássicos:\n" + "\n".join(prompt_linhas)
 

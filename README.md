@@ -12,16 +12,18 @@ Lojas de autopeças com foco em veículos clássicos (Gol quadrado, Chevette, Op
 Este projeto tem como objetivo:
 1. **Enriquecer e Desnormalizar o Catálogo (`bd.csv`):** Utilizar modelos de linguagem avançados (Google Gemini 2.5 Flash) para traduzir códigos e abreviações em metadados ricos (montadora, modelo, ano, lado/posição, acabamento) e gerar perguntas sintéticas de clientes de balcão.
 2. **Construir um SLM (Small Language Model) 100% Offline:** Permitir que o sistema opere localmente no balcão da loja, sem conexão com a internet (usando modelos como Qwen 2.5 3B ou Llama 3.2 3B via Ollama / llama.cpp).
-3. **Mecanismo de Busca Híbrido (RAG Local):** Cruzar a pergunta em linguagem natural do cliente com o catálogo enriquecido para recomendar as peças corretas com preços e compatibilidades exatas.
+3. **Mecanismo de Busca Híbrido (RAG Local):** Cruzar a pergunta em linguagem natural do cliente com o catálogo enriquecido para recomendar as peças corretas com quantidade em estoque e compatibilidades exatas.
 
 ---
 
 ## 🗂️ Estrutura do Repositório
 
 ```text
-├── bd.csv                      # Base de dados original (8.786 produtos)
+├── bd.csv                      # Base de dados original (8.786 produtos com quantidade em estoque)
 ├── enriquecer_base.py          # Script de enriquecimento em lote com Gemini API
 ├── testar_validacao.py         # Script de teste rápido (amostra de 5 itens para economizar cotas)
+├── buscador_local.py           # Motor de busca semântica e paramétrica local (100% offline)
+├── assistente_offline.py       # Assistente de balcão local integrado ao SLM (Ollama) com fallback
 ├── requirements.txt            # Dependências Python do projeto
 ├── .env.example                # Modelo de configuração de variáveis de ambiente
 ├── .env                        # Chaves de API locais (ignorado no git)

@@ -84,7 +84,7 @@ class BuscadorAutoPecas:
         cursor = conn.cursor()
 
         cursor.execute("""
-            SELECT id_original, nome_original, preco, tipo_peca, montadora,
+            SELECT id_original, nome_original, quantidade, tipo_peca, montadora,
                    modelos_compativeis, ano_inicio, ano_fim, posicao_lado,
                    detalhes_acabamento, descricao_amigavel, perguntas_clientes
             FROM produtos
@@ -98,7 +98,7 @@ class BuscadorAutoPecas:
         lado_busca = filtros["lado"]
 
         for row in todos_produtos:
-            (p_id, p_nome_orig, p_preco, p_tipo, p_montadora,
+            (p_id, p_nome_orig, p_quantidade, p_tipo, p_montadora,
              p_modelos, p_ano_ini, p_ano_fim, p_posicao,
              p_acabamento, p_descricao, p_perguntas) = row
 
@@ -135,7 +135,7 @@ class BuscadorAutoPecas:
                 candidatos.append({
                     "id": p_id,
                     "nome_erp": p_nome_orig,
-                    "preco": p_preco,
+                    "quantidade": p_quantidade,
                     "tipo_peca": p_tipo,
                     "montadora": p_montadora,
                     "modelos": p_modelos,
@@ -172,4 +172,4 @@ if __name__ == "__main__":
             print(f"  ⭐ Sugestão #{i} (Score: {res['score']}):")
             print(f"     Produto: {res['descricao']}")
             print(f"     Compatível: {res['modelos']} ({res['ano_inicio'] or 'N/A'}-{res['ano_fim'] or 'N/A'})")
-            print(f"     Posição: {res['posicao']} | Preço: R$ {res['preco']:.2f} | Código: {res['id']}")
+            print(f"     Posição: {res['posicao']} | Estoque: {int(res['quantidade'])} un. | Código: {res['id']}")

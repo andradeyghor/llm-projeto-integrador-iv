@@ -45,7 +45,7 @@ def init_db(db_name="produtos_enriquecidos.db"):
         CREATE TABLE IF NOT EXISTS produtos (
             id_original TEXT PRIMARY KEY,
             nome_original TEXT,
-            preco REAL,
+            quantidade REAL,
             tipo_peca TEXT,
             montadora TEXT,
             modelos_compativeis TEXT,
@@ -99,7 +99,7 @@ def enriquecer_base(limite_total: Optional[int] = 100, tamanho_lote: int = 15, d
     sucessos = 0
     for i in tqdm(range(0, len(registros), tamanho_lote), desc="Progresso dos Lotes"):
         lote = registros[i:i + tamanho_lote]
-        prompt_linhas = [f"- ID: {item['id']} | Nome ERP: {item['nome']} | Preco: R$ {item['preco']}" for item in lote]
+        prompt_linhas = [f"- ID: {item['id']} | Nome ERP: {item['nome']} | Qtd Estoque: {item['quantidade']}" for item in lote]
         prompt_texto = "Desnormalize e enriqueça as seguintes autopeças de carros clássicos:\n" + "\n".join(prompt_linhas)
 
         # Retry com backoff para 503 e oscilações temporárias
@@ -138,7 +138,7 @@ def enriquecer_base(limite_total: Optional[int] = 100, tamanho_lote: int = 15, d
             """, (
                 str(p.id_original),
                 orig.get("nome", ""),
-                float(orig.get("preco", 0.0)),
+                float(orig.get("quantidade", 0.0)),
                 p.tipo_peca,
                 p.montadora,
                 ", ".join(p.modelos_compativeis),

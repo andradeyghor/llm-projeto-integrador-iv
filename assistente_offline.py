@@ -42,7 +42,7 @@ class AssistenteBalcaoOffline:
                 f"- Aplicação: {p['modelos']} (Anos: {p['ano_inicio'] or 'N/A'} a {p['ano_fim'] or 'N/A'})\n"
                 f"- Posição/Lado: {p['posicao']}\n"
                 f"- Acabamento: {p['acabamento']}\n"
-                f"- Preço: R$ {p['preco']:.2f}"
+                f"- Quantidade em estoque: {int(p['quantidade'])} un."
             )
         contexto_str = "\n\n".join(lista_contexto)
 
@@ -50,7 +50,7 @@ class AssistenteBalcaoOffline:
             "Você é um balconista experiente e atencioso de uma autopeças clássicas (carros de 1970 a 1999). "
             "Responda à dúvida do cliente de forma educada, prestativa e direta. "
             "Apresente a peça correta com base no catálogo disponível, confirme a compatibilidade do carro/ano, "
-            "o lado (LD para passageiro ou LE para motorista) e informe o preço e código da peça. "
+            "o lado (LD para passageiro ou LE para motorista) e informe a quantidade disponível em estoque e código da peça. "
             "Não invente dados nem peças fora da lista fornecida."
         )
 
@@ -87,7 +87,7 @@ class AssistenteBalcaoOffline:
             linhas.append(f"📦 Opção {i}: {p['descricao']}")
             linhas.append(f"   • Compatibilidade: {p['modelos']} ({p['ano_inicio'] or 'N/A'} a {p['ano_fim'] or 'N/A'})")
             linhas.append(f"   • Lado/Posição: {p['posicao']}")
-            linhas.append(f"   • Preço: R$ {p['preco']:.2f} | Código: {p['id']}\n")
+            linhas.append(f"   • Estoque: {int(p['quantidade'])} un. disponíveis | Código: {p['id']}\n")
         linhas.append("Quer que eu separe alguma dessas peças para você?")
         return "\n".join(linhas)
 
