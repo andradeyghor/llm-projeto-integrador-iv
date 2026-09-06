@@ -22,7 +22,7 @@ load_dotenv()
 
 # Schema Pydantic para Saída Estruturada
 class ProdutoEnriquecido(BaseModel):
-    id_original: int = Field(description="ID original do produto no bd.csv")
+    id_original: str = Field(description="ID original do produto no bd.csv")
     tipo_peca: str = Field(description="Tipo da peça, ex: Farol Auxiliar, Lanterna Traseira, Retrovisor, Filtro de Ar")
     montadora: str = Field(description="Montadora principal: Volkswagen, Chevrolet, Fiat, Ford, Universal")
     modelos_compativeis: List[str] = Field(description="Lista normalizada de carros compatíveis, ex: ['Gol', 'Parati', 'Saveiro']")
@@ -101,7 +101,7 @@ def enriquecer_base(limite_total: Optional[int] = None, tamanho_lote: int = 15):
 
         try:
             response = client.models.generate_content(
-                model="gemini-2.5-flash",
+                model="gemini-3.6-flash",
                 contents=prompt_texto,
                 config=types.GenerateContentConfig(
                     system_instruction=system_instruction,

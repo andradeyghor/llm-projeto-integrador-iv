@@ -21,7 +21,7 @@ load_dotenv()
 
 # Schema para validação estruturada via Pydantic
 class ProdutoEnriquecido(BaseModel):
-    id_original: int = Field(description="ID original do produto no bd.csv")
+    id_original: str = Field(description="ID original do produto no bd.csv")
     tipo_peca: str = Field(description="Tipo da peça, ex: Farol Auxiliar, Lanterna Traseira, Retrovisor, Filtro de Ar")
     montadora: str = Field(description="Montadora principal: Volkswagen, Chevrolet, Fiat, Ford, Universal")
     modelos_compativeis: List[str] = Field(description="Lista normalizada de carros compatíveis, ex: ['Gol', 'Parati', 'Saveiro']")
@@ -45,15 +45,15 @@ def executar_teste_validacao():
     print("[INFO] Conectando a API do Google Gemini...")
     client = genai.Client(api_key=api_key)
 
-    # Amostra cirúrgica de 5 produtos com diferentes níveis de abreviação e modelos clássicos
-    # - 16: RET. EXT. PE FERRO KOMBI CLIPPER 76/96 LD/LE (BRACO ZAMAK)
-    # - 27: FAROL AUXILIAR GOL/PAR/SAV 87/94 LENTE VIDRO RAIADO LD
-    # - 36: LENTE LANTERNA TRASEIRA FIAT 147 79/82 LUZ DA RE LD
-    # - 43: LENTE LANTERNA TRASEIRA CHEVY 83/94 TRICOLOR LE
-    # - 23: FILTRO DE AR ESPORT. CROM. P/ CARBURADOR VW MOTOR
-    ids_amostra = [16, 27, 36, 43, 23]
+    # 5 peças emblemáticas de carros clássicos da base bd.csv:
+    # 461058: Retrovisor Kombi Clipper 76/96
+    # 600860: Farol Auxiliar Gol/Parati/Saveiro 87/94 LD
+    # 410806: Lente Lanterna Traseira Fiat 147 79/82 LD
+    # 412033: Lente Lanterna Traseira Chevy 83/94 LE
+    # 611274: Filtro de Ar Esportivo Carburador VW Motor AP
+    ids_amostra = ["461058", "600860", "410806", "412033", "611274"]
 
-    df = pd.read_csv("bd.csv")
+    df = pd.read_csv("bd.csv", dtype={"id": str})
     df_amostra = df[df["id"].isin(ids_amostra)]
     if df_amostra.empty:
         df_amostra = df.head(5)
@@ -74,10 +74,10 @@ def executar_teste_validacao():
         "em metadados técnicos precisos, descrições claras e perguntas realistas de clientes de oficina e colecionadores."
     )
 
-    print("[INFO] Enviando 1 unica requisicao para o Gemini 2.5 Flash (~800 tokens)...")
+    print("[INFO] Enviando 1 unica requisicao para o Gemini 3.6 Flash (~800 tokens)...")
     try:
         response = client.models.generate_content(
-            model="gemini-2.5-flash",
+            model="gemini-3.6-flash",
             contents=prompt_texto,
             config=types.GenerateContentConfig(
                 system_instruction=system_instruction,
