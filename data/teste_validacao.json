@@ -1,0 +1,102 @@
+[
+  {
+    "id_original": "461058",
+    "tipo_peca": "Retrovisor Externo",
+    "montadora": "Volkswagen",
+    "modelos_compativeis": [
+      "Kombi",
+      "Kombi Clipper"
+    ],
+    "ano_inicio": 1976,
+    "ano_fim": 1996,
+    "posicao_lado": "Ambos",
+    "detalhes_acabamento": "Pé de ferro e braço em Zamak",
+    "descricao_amigavel": "Retrovisor externo com pé de ferro e braço em Zamak para Volkswagen Kombi Clipper de 1976 a 1996, aplicável em ambos os lados.",
+    "perguntas_clientes": [
+      "Serve na Kombi Clipper 1985?",
+      "O braço é realmente de Zamak com pé de ferro?",
+      "Serve tanto no lado esquerdo quanto no direito?"
+    ]
+  },
+  {
+    "id_original": "611274",
+    "tipo_peca": "Filtro de Ar Esportivo",
+    "montadora": "Volkswagen",
+    "modelos_compativeis": [
+      "Fusca",
+      "Gol",
+      "Parati",
+      "Saveiro",
+      "Voyage",
+      "Kombi",
+      "Brasilia",
+      "Passat"
+    ],
+    "ano_inicio": null,
+    "ano_fim": null,
+    "posicao_lado": "Universal",
+    "detalhes_acabamento": "Acabamento cromado para carburador",
+    "descricao_amigavel": "Filtro de ar esportivo cromado universal para motores Volkswagen carburados.",
+    "perguntas_clientes": [
+      "Esse filtro dá certo no carburador do Fusca?",
+      "É compatível com motor VW a ar?",
+      "Tem acabamento cromado?"
+    ]
+  },
+  {
+    "id_original": "600860",
+    "tipo_peca": "Farol Auxiliar",
+    "montadora": "Volkswagen",
+    "modelos_compativeis": [
+      "Gol",
+      "Parati",
+      "Saveiro"
+    ],
+    "ano_inicio": 1987,
+    "ano_fim": 1994,
+    "posicao_lado": "LD",
+    "detalhes_acabamento": "Lente de vidro raiado",
+    "descricao_amigavel": "Farol auxiliar lado direito com lente de vidro raiado para Volkswagen Gol, Parati e Saveiro fabricados entre 1987 e 1994.",
+    "perguntas_clientes": [
+      "Serve no Gol quadrado 1991?",
+      "A lente é de vidro mesmo ou de acrílico?",
+      "É o lado do passageiro?"
+    ]
+  },
+  {
+    "id_original": "410806",
+    "tipo_peca": "Lente Lanterna Traseira",
+    "montadora": "Fiat",
+    "modelos_compativeis": [
+      "147"
+    ],
+    "ano_inicio": 1979,
+    "ano_fim": 1982,
+    "posicao_lado": "LD",
+    "detalhes_acabamento": "Com espaço para luz de ré",
+    "descricao_amigavel": "Lente da lanterna traseira lado direito com luz de ré para Fiat 147 dos anos de 1979 a 1982.",
+    "perguntas_clientes": [
+      "Essa lente é do Fiat 147 modelo de 1979 a 1982?",
+      "Tem a parte da luz de ré no lado direito?",
+      "Vem o par ou é só o lado direito?"
+    ]
+  },
+  {
+    "id_original": "412033",
+    "tipo_peca": "Lente Lanterna Traseira",
+    "montadora": "Chevrolet",
+    "modelos_compativeis": [
+      "Chevy 500"
+    ],
+    "ano_inicio": 1983,
+    "ano_fim": 1994,
+    "posicao_lado": "LE",
+    "detalhes_acabamento": "Acabamento tricolor",
+    "descricao_amigavel": "Lente da lanterna traseira tricolor lado esquerdo para Chevrolet Chevy 500 de 1983 a 1994.",
+    "perguntas_clientes": [
+      "Serve na Chevy 500 do ano 1992?",
+      "É a lente tricolor do lado do motorista?",
+      "A cor da lente é idêntica à original da época?"
+    ]
+  }
+]

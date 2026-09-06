@@ -26,6 +26,10 @@ data/processed/
 data/cache/
 produtos_enriquecidos.db
 
+# Bases de dados locais sensíveis / brutas
+bd.csv
+*.csv
+
 # IDEs e Editores
 .vscode/
 .idea/
